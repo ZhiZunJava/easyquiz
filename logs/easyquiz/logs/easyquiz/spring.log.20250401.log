@@ -13001,3 +13001,15 @@ Unconditional classes:
 2025-04-01 23:42:23.297  WARN 83488 --- [http-nio-8080-exec-2] o.s.web.servlet.PageNotFound             : No endpoint GET /favicon.ico.
 2025-04-01 23:42:27.049  WARN 83488 --- [http-nio-8080-exec-4] o.s.web.servlet.PageNotFound             : No mapping for GET /student
 2025-04-01 23:42:27.049  WARN 83488 --- [http-nio-8080-exec-4] o.s.web.servlet.PageNotFound             : No endpoint GET /student.
+2025-04-01 23:49:39.810  WARN 83488 --- [http-nio-8080-exec-10] o.s.web.servlet.PageNotFound             : No mapping for GET /student
+2025-04-01 23:49:39.812  WARN 83488 --- [http-nio-8080-exec-10] o.s.web.servlet.PageNotFound             : No endpoint GET /student.
+2025-04-01 23:57:41.916  WARN 83488 --- [http-nio-8080-exec-4] o.s.web.servlet.PageNotFound             : No mapping for GET /api/user/login
+2025-04-01 23:57:41.917  WARN 83488 --- [http-nio-8080-exec-4] o.s.web.servlet.PageNotFound             : No endpoint GET /api/user/login.
+2025-04-01 23:58:00.671  INFO 83488 --- [SpringApplicationShutdownHook] org.quartz.core.QuartzScheduler          : Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+2025-04-01 23:58:00.673  INFO 83488 --- [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-04-01 23:58:00.678  INFO 83488 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-04-01 23:58:00.682  INFO 83488 --- [SpringApplicationShutdownHook] o.s.s.quartz.SchedulerFactoryBean        : Shutting down Quartz Scheduler
+2025-04-01 23:58:00.682  INFO 83488 --- [SpringApplicationShutdownHook] org.quartz.core.QuartzScheduler          : Scheduler quartzScheduler_$_NON_CLUSTERED shutting down.
+2025-04-01 23:58:00.682  INFO 83488 --- [SpringApplicationShutdownHook] org.quartz.core.QuartzScheduler          : Scheduler quartzScheduler_$_NON_CLUSTERED paused.
+2025-04-01 23:58:00.682  INFO 83488 --- [SpringApplicationShutdownHook] org.quartz.core.QuartzScheduler          : Scheduler quartzScheduler_$_NON_CLUSTERED shutdown complete.
+2025-04-01 23:58:00.683  INFO 83488 --- [SpringApplicationShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-0} closing ...

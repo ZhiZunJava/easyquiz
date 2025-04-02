@@ -38,8 +38,6 @@ public interface UserMapper extends BasicMapper<User> {
 
     void deleteUsersByIds(List<Integer> ids);
 
-    void insertUserSql(User user);
-
     Integer selectAllCount();
 
     List<KeyValue> selectByUserName(String userName);
