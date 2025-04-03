@@ -1,7 +1,7 @@
 package com.can.easyquiz.config;
 
 import com.can.easyquiz.annotation.RestResponse;
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.utils.ErrorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class ExceptionHandle {
     @ResponseBody
     public RestResponse handler(Exception e) {
         logger.error(e.getMessage(), e);
-        return new RestResponse<>(SystemCode.InnerError.getCode(), SystemCode.InnerError.getMessage());
+        return new RestResponse<>(SystemCodeEnum.InnerError.getCode(), SystemCodeEnum.InnerError.getMessage());
     }
 
     /**
@@ -44,7 +44,7 @@ public class ExceptionHandle {
             FieldError fieldError = (FieldError) file;
             return ErrorUtil.parameterErrorFormat(fieldError.getField(), fieldError.getDefaultMessage());
         }).collect(Collectors.joining());
-        return new RestResponse<>(SystemCode.ParameterValidError.getCode(), errorMsg);
+        return new RestResponse<>(SystemCodeEnum.ParameterValidError.getCode(), errorMsg);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ExceptionHandle {
             FieldError fieldError = (FieldError) file;
             return ErrorUtil.parameterErrorFormat(fieldError.getField(), fieldError.getDefaultMessage());
         }).collect(Collectors.joining());
-        return new RestResponse<>(SystemCode.ParameterValidError.getCode(), errorMsg);
+        return new RestResponse<>(SystemCodeEnum.ParameterValidError.getCode(), errorMsg);
     }
 
 

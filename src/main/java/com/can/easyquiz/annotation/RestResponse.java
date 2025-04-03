@@ -1,6 +1,6 @@
 package com.can.easyquiz.annotation;
 
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -85,8 +85,8 @@ public class RestResponse<T> {
      * @return the rest response
      */
     public static RestResponse ok() {
-        SystemCode systemCode = SystemCode.OK;
-        return new RestResponse<>(systemCode.getCode(), systemCode.getMessage());
+        SystemCodeEnum systemCodeEnum = SystemCodeEnum.OK;
+        return new RestResponse<>(systemCodeEnum.getCode(), systemCodeEnum.getMessage());
     }
 
     /**
@@ -97,8 +97,8 @@ public class RestResponse<T> {
      * @return the rest response
      */
     public static <F> RestResponse<F> ok(F response) {
-        SystemCode systemCode = SystemCode.OK;
-        return new RestResponse<>(systemCode.getCode(), systemCode.getMessage(), response);
+        SystemCodeEnum systemCodeEnum = SystemCodeEnum.OK;
+        return new RestResponse<>(systemCodeEnum.getCode(), systemCodeEnum.getMessage(), response);
     }
 
 }

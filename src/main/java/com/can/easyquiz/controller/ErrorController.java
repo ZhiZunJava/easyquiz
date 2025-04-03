@@ -1,6 +1,6 @@
 package com.can.easyquiz.controller;
 
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
@@ -24,8 +24,8 @@ public class ErrorController extends BasicErrorController {
     @GetMapping(value = "/error", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
         Map<String, Object> error = new HashMap<>(2);
-        error.put("code", SystemCode.InnerError.getCode());
-        error.put("message", SystemCode.InnerError.getMessage());
+        error.put("code", SystemCodeEnum.InnerError.getCode());
+        error.put("message", SystemCodeEnum.InnerError.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR); // 更符合错误处理的语义
     }
 }

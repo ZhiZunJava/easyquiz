@@ -1,6 +1,6 @@
 package com.can.easyquiz.enums;
 
-public enum SystemCode {
+public enum SystemCodeEnum {
     /**
      * OK
      */
@@ -40,7 +40,7 @@ public enum SystemCode {
      */
     String message;
 
-    SystemCode(int code, String message) {
+    SystemCodeEnum(int code, String message) {
         this.code = code;
         this.message = message;
     }

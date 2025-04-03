@@ -1,7 +1,7 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.enums.Role;
-import com.can.easyquiz.enums.UserStatus;
+import com.can.easyquiz.enums.RoleEnum;
+import com.can.easyquiz.enums.UserStatusEnum;
 import com.can.easyquiz.service.AuthenticationService;
 import com.can.easyquiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -46,13 +45,13 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("用户名或密码错误");
         }
 
-        UserStatus userStatusEnum = UserStatus.fromCode(user.getStatus());
-        if (UserStatus.Disable == userStatusEnum) {
+        UserStatusEnum userStatusEnum = UserStatusEnum.fromCode(user.getStatus());
+        if (UserStatusEnum.Disable == userStatusEnum) {
             throw new LockedException("用户被禁用");
         }
 
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(Role.fromCode(user.getRole()).getRoleName()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(RoleEnum.fromCode(user.getRole()).getRoleName()));
 
         User authUser = new User(user.getUserName(), user.getPassword(), grantedAuthorities);
         return new UsernamePasswordAuthenticationToken(authUser, authUser.getPassword(), authUser.getAuthorities());

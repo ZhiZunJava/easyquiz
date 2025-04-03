@@ -2,7 +2,7 @@ package com.can.easyquiz.config.security;
 
 import com.can.easyquiz.domain.User;
 import com.can.easyquiz.domain.UserEventLog;
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.event.UserEvent;
 import com.can.easyquiz.service.UserService;
 import com.can.easyquiz.utils.RestUtil;
@@ -42,6 +42,6 @@ public class RestLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
             userEventLog.setContent(user.getUserName() + " 登出了轻松考开源考试系统");
             eventPublisher.publishEvent(new UserEvent(userEventLog));
         }
-        RestUtil.response(response, SystemCode.OK);
+        RestUtil.response(response, SystemCodeEnum.OK);
     }
 }

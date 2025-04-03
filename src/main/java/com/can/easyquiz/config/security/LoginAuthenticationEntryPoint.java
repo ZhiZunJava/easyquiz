@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.utils.RestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +20,6 @@ public final class LoginAuthenticationEntryPoint extends LoginUrlAuthenticationE
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        RestUtil.response(response, SystemCode.UNAUTHORIZED);
+        RestUtil.response(response, SystemCodeEnum.UNAUTHORIZED);
     }
 }

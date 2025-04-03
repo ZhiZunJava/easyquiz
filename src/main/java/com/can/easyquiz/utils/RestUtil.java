@@ -1,7 +1,7 @@
 package com.can.easyquiz.utils;
 
 import com.can.easyquiz.annotation.RestResponse;
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +15,10 @@ public class RestUtil {
      * Response.
      *
      * @param response   the response
-     * @param systemCode the system code
+     * @param systemCodeEnum the system code
      */
-    public static void response(HttpServletResponse response, SystemCode systemCode) {
-        response(response, systemCode.getCode(), systemCode.getMessage());
+    public static void response(HttpServletResponse response, SystemCodeEnum systemCodeEnum) {
+        response(response, systemCodeEnum.getCode(), systemCodeEnum.getMessage());
     }
 
     /**

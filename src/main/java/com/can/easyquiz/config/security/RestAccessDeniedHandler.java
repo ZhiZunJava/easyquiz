@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.utils.RestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +15,6 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException {
-        RestUtil.response(response, SystemCode.AccessDenied);
+        RestUtil.response(response, SystemCodeEnum.AccessDenied);
     }
 }

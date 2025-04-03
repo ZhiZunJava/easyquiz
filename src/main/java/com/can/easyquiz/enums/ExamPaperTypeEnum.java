@@ -3,29 +3,32 @@ package com.can.easyquiz.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Role {
-    STUDENT(1, "STUDENT"),
-    ADMIN(3, "ADMIN");
+public enum ExamPaperTypeEnum {
+
+    Fixed(1, "固定试卷"),
+    TimeLimit(2, "时段试卷");
 
     int code;
     String name;
 
-    Role(int code, String name) {
+    ExamPaperTypeEnum(int code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    private static final Map<Integer, Role> keyMap = new HashMap<>();
+
+    private static final Map<Integer, ExamPaperTypeEnum> keyMap = new HashMap<>();
 
     static {
-        for (Role item : Role.values()) {
+        for (ExamPaperTypeEnum item : ExamPaperTypeEnum.values()) {
             keyMap.put(item.getCode(), item);
         }
     }
 
-    public static Role fromCode(Integer code) {
+    public static ExamPaperTypeEnum fromCode(Integer code) {
         return keyMap.get(code);
     }
+
 
     public int getCode() {
         return code;
@@ -43,7 +46,5 @@ public enum Role {
         this.name = name;
     }
 
-    public String getRoleName() {
-        return "ROLE_" + name;
-    }
+
 }

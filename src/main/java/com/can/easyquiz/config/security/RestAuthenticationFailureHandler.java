@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.enums.SystemCode;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.utils.RestUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,6 +15,6 @@ public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        RestUtil.response(response, SystemCode.AuthError.getCode(), exception.getMessage());
+        RestUtil.response(response, SystemCodeEnum.AuthError.getCode(), exception.getMessage());
     }
 }

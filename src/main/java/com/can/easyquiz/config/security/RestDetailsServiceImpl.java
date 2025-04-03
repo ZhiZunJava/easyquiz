@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.enums.Role;
+import com.can.easyquiz.enums.RoleEnum;
 import com.can.easyquiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,7 +38,7 @@ public class RestDetailsServiceImpl implements UserDetailsService {
         }
 
         ArrayList<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(Role.fromCode(user.getRole()).getRoleName()));
+        grantedAuthorities.add(new SimpleGrantedAuthority(RoleEnum.fromCode(user.getRole()).getRoleName()));
 
         return new User(user.getUserName(), user.getPassword(), grantedAuthorities);
     }

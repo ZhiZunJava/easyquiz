@@ -2,7 +2,7 @@ package com.can.easyquiz.config.security;
 
 import com.can.easyquiz.config.property.CookieConfig;
 import com.can.easyquiz.config.property.SystemConfig;
-import com.can.easyquiz.enums.Role;
+import com.can.easyquiz.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -79,8 +79,8 @@ public class SecurityConfig {
                 // 配置请求授权
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ignores).permitAll()
-                        .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.getName())
-                        .requestMatchers("/api/student/**").hasRole(Role.STUDENT.getName())
+                        .requestMatchers("/api/admin/**").hasRole(RoleEnum.ADMIN.getName())
+                        .requestMatchers("/api/student/**").hasRole(RoleEnum.STUDENT.getName())
                         .anyRequest().permitAll()
                 )
                 // 配置表单登录
