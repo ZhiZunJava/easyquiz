@@ -4,16 +4,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.List;
 
 @ConfigurationProperties(prefix = "system")
-public class System {
+public class SystemConfig {
 
-    private Password pwdKey;
+    private PasswordConfig pwdKey;
     private List<String> securityIgnoreUrls;
 
-    public Password getPwdKey() {
+    public PasswordConfig getPwdKey() {
         return pwdKey;
     }
 
-    public void setPwdKey(Password pwdKey) {
+    public void setPwdKey(PasswordConfig pwdKey) {
         this.pwdKey = pwdKey;
     }
 

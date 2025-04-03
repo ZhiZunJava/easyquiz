@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.property;
 
-public class Cookie {
+public class CookieConfig {
 
     /**
      * Gets name.

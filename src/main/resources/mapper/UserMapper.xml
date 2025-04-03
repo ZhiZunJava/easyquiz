@@ -300,7 +300,7 @@
     </select>
 
 
-    <select id="userPage" resultMap="BaseResultMap" parameterType="com.can.easyquiz.viewmodel.admin.user.UserPageRequest">
+    <select id="userPage" resultMap="BaseResultMap" parameterType="com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_user

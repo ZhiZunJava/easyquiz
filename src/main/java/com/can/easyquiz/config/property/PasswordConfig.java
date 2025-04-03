@@ -1,6 +1,6 @@
 package com.can.easyquiz.config.property;
 
-public class Password {
+public class PasswordConfig {
     private String publicKey;
 
     private String privateKey;

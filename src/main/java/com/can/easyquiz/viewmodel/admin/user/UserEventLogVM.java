@@ -1,6 +1,6 @@
 package com.can.easyquiz.viewmodel.admin.user;
 
-public class UserEventLog {
+public class UserEventLogVM {
 
     private Integer id;
 

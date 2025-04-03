@@ -1,19 +1,21 @@
 package com.can.easyquiz;
 
-import com.can.easyquiz.config.property.System;
+import com.can.easyquiz.config.property.SystemConfig;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Log4j2
 @SpringBootApplication
-@EnableConfigurationProperties(value = {System.class})
+@EnableTransactionManagement
+@EnableConfigurationProperties(value = {SystemConfig.class})
 public class EasyquizApplication {
 
     public static void main(String[] args) throws UnknownHostException {

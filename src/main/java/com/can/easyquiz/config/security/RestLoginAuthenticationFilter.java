@@ -1,7 +1,7 @@
 package com.can.easyquiz.config.security;
 
 
-import com.can.easyquiz.config.property.Cookie;
+import com.can.easyquiz.config.property.CookieConfig;
 import com.can.easyquiz.utils.JsonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,8 +49,8 @@ public class RestLoginAuthenticationFilter extends AbstractAuthenticationProcess
      * @param userDetailsService the user details service
      */
     void setUserDetailsService(UserDetailsService userDetailsService) {
-        RestTokenBasedRememberMeServices tokenBasedRememberMeServices = new RestTokenBasedRememberMeServices(Cookie.getName(), userDetailsService);
-        tokenBasedRememberMeServices.setTokenValiditySeconds(Cookie.getInterval());
+        RestTokenBasedRememberMeServices tokenBasedRememberMeServices = new RestTokenBasedRememberMeServices(CookieConfig.getName(), userDetailsService);
+        tokenBasedRememberMeServices.setTokenValiditySeconds(CookieConfig.getInterval());
         setRememberMeServices(tokenBasedRememberMeServices);
     }
 

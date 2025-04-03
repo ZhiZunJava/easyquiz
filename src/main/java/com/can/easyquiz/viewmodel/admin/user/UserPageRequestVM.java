@@ -2,7 +2,7 @@ package com.can.easyquiz.viewmodel.admin.user;
 
 import com.can.easyquiz.annotation.BasePage;
 
-public class UserPageRequest  extends BasePage {
+public class UserPageRequestVM extends BasePage {
 
     private String userName;
     private Integer role;

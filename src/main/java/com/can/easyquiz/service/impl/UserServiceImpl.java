@@ -6,7 +6,7 @@ import com.can.easyquiz.event.OnRegistrationCompleteEvent;
 import com.can.easyquiz.exception.BusinessException;
 import com.can.easyquiz.repository.UserMapper;
 import com.can.easyquiz.service.UserService;
-import com.can.easyquiz.viewmodel.admin.user.UserPageRequest;
+import com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
 
     @Override
-    public PageInfo<User> userPage(UserPageRequest requestVM) {
+    public PageInfo<User> userPage(UserPageRequestVM requestVM) {
         return PageHelper.startPage(requestVM.getPageIndex(), requestVM.getPageSize(), "id desc").doSelectPageInfo(() ->
                 userMapper.userPage(requestVM)
         );

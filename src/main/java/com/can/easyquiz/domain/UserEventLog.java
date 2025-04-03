@@ -3,7 +3,7 @@ package com.can.easyquiz.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class UserEventLog implements  Serializable  {
+public class UserEventLog implements Serializable {
     private static final long serialVersionUID = -3951198127152024633L;
 
 

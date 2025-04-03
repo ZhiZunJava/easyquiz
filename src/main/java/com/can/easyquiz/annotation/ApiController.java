@@ -1,26 +1,34 @@
 package com.can.easyquiz.annotation;
 
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import com.can.easyquiz.domain.User;
+import com.can.easyquiz.utils.ModelMapperSingle;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+@Component
+public class ApiController {
+    /**
+     * The constant DEFAULT_PAGE_SIZE.
+     */
+    protected final static String DEFAULT_PAGE_SIZE = "10";
+    /**
+     * The constant modelMapper.
+     */
+    protected final static ModelMapper modelMapper = ModelMapperSingle.Instance();
+    /**
+     * The Web context.
+     */
+    @Autowired
+    protected WebContext webContext;
 
-
-@Target(TYPE)
-@Retention(RUNTIME)
-@Inherited
-@Documented
-@RestController
-@RequestMapping
-public @interface ApiController {
-
-    @AliasFor(annotation = RequestMapping.class, attribute = "path")
-    String value();
+    /**
+     * Gets current user.
+     *
+     * @return the current user
+     */
+    protected User getCurrentUser() {
+        return webContext.getCurrentUser();
+    }
 }

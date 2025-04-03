@@ -1,10 +1,7 @@
 package com.can.easyquiz.service.impl;
 
-import com.can.easyquiz.domain.UserEventLog;
 import com.can.easyquiz.repository.BasicMapper;
 import com.can.easyquiz.service.BasicService;
-import com.can.easyquiz.viewmodel.admin.user.UserEventPageRequest;
-import com.github.pagehelper.PageInfo;
 
 public abstract class BaseServiceImpl<T> implements BasicService<T> {
 

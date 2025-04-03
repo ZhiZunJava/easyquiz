@@ -1,6 +1,5 @@
 package com.can.easyquiz.config.security;
 
-import com.can.easyquiz.annotation.WebContext;
 import com.can.easyquiz.enums.Role;
 import com.can.easyquiz.enums.UserStatus;
 import com.can.easyquiz.service.AuthenticationService;
@@ -14,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
@@ -24,13 +24,11 @@ import java.util.ArrayList;
 public class RestAuthenticationProvider implements AuthenticationProvider {
     private final AuthenticationService authenticationService;
     private final UserService userService;
-    private final WebContext webContext;
 
     @Autowired
-    public RestAuthenticationProvider(AuthenticationService authenticationService, UserService userService, WebContext webContext) {
+    public RestAuthenticationProvider(AuthenticationService authenticationService, UserService userService) {
         this.authenticationService = authenticationService;
         this.userService = userService;
-        this.webContext = webContext;
     }
 
     @Override
@@ -40,7 +38,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
 
         com.can.easyquiz.domain.User user = userService.getUserByUserName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("用户名或密码错误");
+            throw new UsernameNotFoundException("用户不存在");
         }
 
         boolean result = authenticationService.authUser(user, username, password);

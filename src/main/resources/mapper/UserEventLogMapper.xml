@@ -115,7 +115,7 @@
         limit 10
     </select>
 
-    <select id="page" resultMap="BaseResultMap" parameterType="com.can.easyquiz.viewmodel.admin.user.UserEventPageRequest">
+    <select id="page" resultMap="BaseResultMap" parameterType="com.can.easyquiz.viewmodel.admin.user.UserEventPageRequestVM">
         select
         <include refid="Base_Column_List"/>
         from t_user_event_log

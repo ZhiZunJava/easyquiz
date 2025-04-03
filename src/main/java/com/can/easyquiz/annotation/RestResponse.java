@@ -1,10 +1,47 @@
 package com.can.easyquiz.annotation;
 
 import com.can.easyquiz.enums.SystemCode;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class RestResponse<T> {
+    /**
+     * -- GETTER --
+     *  Gets code.
+     *
+     *
+     * -- SETTER --
+     *  Sets code.
+     *
+     @return the code
+      * @param code the code
+     */
     private int code;
+    /**
+     * -- GETTER --
+     *  Gets message.
+     *
+     *
+     * -- SETTER --
+     *  Sets message.
+     *
+     @return the message
+      * @param message the message
+     */
     private String message;
+    /**
+     * -- GETTER --
+     *  Gets response.
+     *
+     *
+     * -- SETTER --
+     *  Sets response.
+     *
+     @return the response
+      * @param response the response
+     */
     private T response;
 
     /**
@@ -64,57 +101,4 @@ public class RestResponse<T> {
         return new RestResponse<>(systemCode.getCode(), systemCode.getMessage(), response);
     }
 
-    /**
-     * Gets code.
-     *
-     * @return the code
-     */
-    public int getCode() {
-        return code;
-    }
-
-    /**
-     * Sets code.
-     *
-     * @param code the code
-     */
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    /**
-     * Gets message.
-     *
-     * @return the message
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Sets message.
-     *
-     * @param message the message
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    /**
-     * Gets response.
-     *
-     * @return the response
-     */
-    public T getResponse() {
-        return response;
-    }
-
-    /**
-     * Sets response.
-     *
-     * @param response the response
-     */
-    public void setResponse(T response) {
-        this.response = response;
-    }
 }

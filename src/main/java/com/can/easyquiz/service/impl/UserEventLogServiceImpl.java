@@ -5,7 +5,7 @@ import com.can.easyquiz.domain.UserEventLog;
 import com.can.easyquiz.repository.UserEventLogMapper;
 import com.can.easyquiz.service.UserEventLogService; // 正确导入接口
 import com.can.easyquiz.utils.DateTimeUtil;
-import com.can.easyquiz.viewmodel.admin.user.UserEventPageRequest;
+import com.can.easyquiz.viewmodel.admin.user.UserEventPageRequestVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
-public abstract class UserEventLogServiceImpl extends BaseServiceImpl<UserEventLog> implements UserEventLogService {
+public class UserEventLogServiceImpl extends BaseServiceImpl<UserEventLog> implements UserEventLogService {
     private final UserEventLogMapper userEventLogMapper;
 
     @Autowired
@@ -26,12 +26,12 @@ public abstract class UserEventLogServiceImpl extends BaseServiceImpl<UserEventL
     }
 
     @Override
-    public List<UserEventLogMapper> getUserEventLogByUserId(Integer id) {
+    public List<UserEventLog> getUserEventLogByUserId(Integer id) {
         return userEventLogMapper.getUserEventLogByUserId(id);
     }
 
     @Override
-    public PageInfo<UserEventLog> page(UserEventPageRequest requestVM) {
+    public PageInfo<UserEventLog> page(UserEventPageRequestVM requestVM) {
         return PageHelper.startPage(requestVM.getPageIndex(), requestVM.getPageSize(), "id desc").doSelectPageInfo(() ->
                 userEventLogMapper.page(requestVM)
         );

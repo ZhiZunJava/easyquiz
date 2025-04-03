@@ -8,10 +8,11 @@ import com.can.easyquiz.utils.RestUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,6 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     private final ApplicationEventPublisher eventPublisher;
     private final UserService userService;
 
-    @Autowired
     public RestAuthenticationSuccessHandler(ApplicationEventPublisher eventPublisher, UserService userService) {
         this.eventPublisher = eventPublisher;
         this.userService = userService;
@@ -32,6 +32,9 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        // 确保创建session
+        request.getSession(true);
+        
         Object object = authentication.getPrincipal();
         if (null != object) {
             User springUser = (User) object;

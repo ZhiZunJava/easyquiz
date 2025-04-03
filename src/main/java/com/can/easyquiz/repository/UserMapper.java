@@ -2,7 +2,7 @@ package com.can.easyquiz.repository;
 
 import com.can.easyquiz.domain.KeyValue;
 import com.can.easyquiz.domain.User;
-import com.can.easyquiz.viewmodel.admin.user.UserPageRequest;
+import com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -26,7 +26,7 @@ public interface UserMapper extends BasicMapper<User> {
 
     Integer userPageCount(Map<String, Object> map);
 
-    List<User> userPage(UserPageRequest requestVM);
+    List<User> userPage(UserPageRequestVM requestVM);
 
     void insertUser(User user);
 

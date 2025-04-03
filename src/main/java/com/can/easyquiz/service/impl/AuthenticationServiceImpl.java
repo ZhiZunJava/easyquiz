@@ -1,6 +1,6 @@
 package com.can.easyquiz.service.impl;
 
-import com.can.easyquiz.config.property.System;
+import com.can.easyquiz.config.property.SystemConfig;
 import com.can.easyquiz.domain.User;
 import com.can.easyquiz.service.AuthenticationService;
 import com.can.easyquiz.service.UserService;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserService userService;
-    private final System systemConfig;
+    private final SystemConfig systemConfig;
 
     @Autowired
-    public AuthenticationServiceImpl(UserService userService, System systemConfig) {
+    public AuthenticationServiceImpl(UserService userService, SystemConfig systemConfig) {
         this.userService = userService;
         this.systemConfig = systemConfig;
     }

@@ -1,25 +1,11 @@
 package com.can.easyquiz.config;
 
-import com.can.easyquiz.config.property.System;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
-public class WebMvcConfiguration extends WebMvcConfigurationSupport {
-    private final System systemConfig;
-
-    /**
-     * Instantiates a new Web mvc configuration.
-     *
-     * @param systemConfig            the system config
-     */
-    @Autowired
-    public WebMvcConfiguration(System systemConfig) {
-        this.systemConfig = systemConfig;
-    }
-
+public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/student/index.html");
@@ -39,8 +25,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .allowedMethods("*")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedHeaders("*");
-        super.addCorsMappings(registry);
     }
 }

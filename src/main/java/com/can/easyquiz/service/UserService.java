@@ -2,7 +2,7 @@ package com.can.easyquiz.service;
 
 import com.can.easyquiz.domain.KeyValue;
 import com.can.easyquiz.domain.User;
-import com.can.easyquiz.viewmodel.admin.user.UserPageRequest;
+import com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface UserService extends BasicService<User> {
 
     Integer userPageCount(String name);
 
-    PageInfo<User> userPage(UserPageRequest requestVM);
+    PageInfo<User> userPage(UserPageRequestVM requestVM);
 
     void insertUser(User user);
 
