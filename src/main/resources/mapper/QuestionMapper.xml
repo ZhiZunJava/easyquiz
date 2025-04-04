@@ -228,4 +228,17 @@
         GROUP BY create_time
     </select>
 
+    <select id="selectRandomQuestionsByTypeAndDifficulty" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_question
+        WHERE subject_id = #{subjectId}
+        AND question_type = #{questionType}
+        AND difficult = #{difficulty}
+        AND deleted = 0
+        AND status = 1
+        ORDER BY RAND()
+        LIMIT #{count}
+    </select>
+
 </mapper>

@@ -7,6 +7,7 @@ import com.can.easyquiz.domain.MessageUser;
 import com.can.easyquiz.domain.User;
 import com.can.easyquiz.domain.UserEventLog;
 import com.can.easyquiz.enums.RoleEnum;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.enums.UserStatusEnum;
 import com.can.easyquiz.event.UserEvent;
 import com.can.easyquiz.service.AuthenticationService;
@@ -91,6 +92,21 @@ public class UserController extends ApiController {
         userEventLog.setContent(user.getUserName() + " 更新了个人资料");
         eventPublisher.publishEvent(new UserEvent(userEventLog));
         return RestResponse.ok();
+    }
+
+    @RequestMapping(value = "/password", method = RequestMethod.POST)
+    public RestResponse updatePassword(@RequestBody @Valid UserPasswordVM model) {
+        User user = getCurrentUser();
+        boolean success = userService.updatePassword(user.getId(), model.getOldPassword(), model.getNewPassword());
+        if (!success) {
+            return RestResponse.fail(SystemCodeEnum.AuthError.getCode(), "原密码不正确");
+        }
+        
+        UserEventLog userEventLog = new UserEventLog(user.getId(), user.getUserName(), user.getRealName(), new Date());
+        userEventLog.setContent(user.getUserName() + " 修改了密码");
+        eventPublisher.publishEvent(new UserEvent(userEventLog));
+        
+        return RestResponse.ok("密码修改成功");
     }
 
     @RequestMapping(value = "/log", method = RequestMethod.POST)

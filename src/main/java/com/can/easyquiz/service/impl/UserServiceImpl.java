@@ -6,6 +6,7 @@ import com.can.easyquiz.event.OnRegistrationCompleteEvent;
 import com.can.easyquiz.exception.BusinessException;
 import com.can.easyquiz.repository.UserMapper;
 import com.can.easyquiz.service.UserService;
+import com.can.easyquiz.service.AuthenticationService;
 import com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,17 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
     private final UserMapper userMapper;
+    private final AuthenticationService authenticationService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, ApplicationEventPublisher eventPublisher) {
+    public UserServiceImpl(UserMapper userMapper, AuthenticationService authenticationService, ApplicationEventPublisher eventPublisher) {
         super(userMapper);
         this.userMapper = userMapper;
+        this.authenticationService = authenticationService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -149,5 +153,33 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         changePictureUser.setId(user.getId());
         changePictureUser.setImagePath(imagePath);
         userMapper.updateByPrimaryKeySelective(changePictureUser);
+    }
+
+    @Override
+    @Transactional
+    public boolean updatePassword(Integer userId, String oldPassword, String newPassword) {
+        User user = userMapper.getUserById(userId);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+
+        // 验证旧密码
+        String decodedOldPassword = authenticationService.pwdDecode(user.getPassword());
+        if (!oldPassword.equals(decodedOldPassword)) {
+            return false;
+        }
+
+        // 加密新密码
+        String encodedNewPassword = authenticationService.pwdEncode(newPassword);
+        user.setPassword(encodedNewPassword);
+        user.setModifyTime(new Date());
+        
+        // 更新密码
+        userMapper.updateUser(user);
+        
+        // 发布密码修改事件
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
+        
+        return true;
     }
 }

@@ -3,6 +3,7 @@ package com.can.easyquiz.service.impl;
 import com.can.easyquiz.domain.*;
 import com.can.easyquiz.enums.ActionEnum;
 import com.can.easyquiz.enums.ExamPaperTypeEnum;
+import com.can.easyquiz.enums.QuestionTypeEnum;
 import com.can.easyquiz.repository.ExamPaperMapper;
 import com.can.easyquiz.repository.QuestionMapper;
 import com.can.easyquiz.service.ExamPaperService;
@@ -20,6 +21,7 @@ import com.can.easyquiz.viewmodel.admin.question.QuestionEditRequestVM;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperFilter;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfo;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageVM;
+import com.can.easyquiz.viewmodel.paper.ExamPaperGenerateVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.modelmapper.ModelMapper;
@@ -27,9 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -192,5 +192,100 @@ public class ExamPaperServiceImpl extends BaseServiceImpl<ExamPaper> implements 
             titleItem.setQuestionItems(questionItems);
             return titleItem;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public ExamPaper generateSmartPaper(ExamPaperGenerateVM model, User user) {
+        ExamPaper examPaper = new ExamPaper();
+        examPaper.setName(model.getName() != null ? model.getName() : "智能训练试卷");
+        examPaper.setSubjectId(model.getSubjectId());
+        examPaper.setPaperType(ExamPaperTypeEnum.SmartTraining.getCode());
+        examPaper.setGradeLevel(subjectService.levelBySubjectId(model.getSubjectId()));
+        examPaper.setCreateUser(user.getId());
+        examPaper.setCreateTime(new Date());
+        examPaper.setDeleted(false);
+
+        // 获取题目
+        List<Question> singleChoiceQuestions = questionMapper.selectRandomQuestionsByTypeAndDifficulty(
+            model.getSubjectId(), QuestionTypeEnum.SingleChoice.getCode(), model.getDifficulty(), model.getSingleChoiceCount());
+        List<Question> multipleChoiceQuestions = questionMapper.selectRandomQuestionsByTypeAndDifficulty(
+            model.getSubjectId(), QuestionTypeEnum.MultipleChoice.getCode(), model.getDifficulty(), model.getMultipleChoiceCount());
+        List<Question> judgementQuestions = questionMapper.selectRandomQuestionsByTypeAndDifficulty(
+            model.getSubjectId(), QuestionTypeEnum.TrueFalse.getCode(), model.getDifficulty(), model.getJudgementCount());
+
+        // 检查是否有足够的题目
+        if (singleChoiceQuestions.size() < model.getSingleChoiceCount() ||
+            multipleChoiceQuestions.size() < model.getMultipleChoiceCount() ||
+            judgementQuestions.size() < model.getJudgementCount()) {
+            throw new RuntimeException("题库中没有足够的题目，请调整题目数量或难度等级");
+        }
+
+        // 计算总分
+        int totalScore = singleChoiceQuestions.stream().mapToInt(Question::getScore).sum() +
+                        multipleChoiceQuestions.stream().mapToInt(Question::getScore).sum() +
+                        judgementQuestions.stream().mapToInt(Question::getScore).sum();
+        
+        int totalQuestions = singleChoiceQuestions.size() + multipleChoiceQuestions.size() + judgementQuestions.size();
+
+        // 计算建议时间：基础时间 + 难度系数 * 题目数量
+        int baseTime = 30; // 基础时间30分钟
+        double difficultyFactor = model.getDifficulty() * 0.2; // 难度系数，每增加一级难度增加20%时间
+        int suggestTime = (int) (baseTime + (totalQuestions * difficultyFactor));
+        examPaper.setSuggestTime(model.getSuggestTime() != null ? model.getSuggestTime() : suggestTime);
+
+        examPaper.setScore(totalScore);
+        examPaper.setQuestionCount(totalQuestions);
+
+        // 保存试卷
+        examPaperMapper.insertSelective(examPaper);
+
+        // 保存试卷框架内容
+        TextContent frameTextContent = new TextContent();
+        List<ExamPaperTitleItemVM> titleItems = new ArrayList<>();
+        
+        if (!singleChoiceQuestions.isEmpty()) {
+            ExamPaperTitleItemVM singleChoiceTitle = new ExamPaperTitleItemVM();
+            singleChoiceTitle.setName("单选题");
+            singleChoiceTitle.setQuestionItems(singleChoiceQuestions.stream()
+                .map(q -> {
+                    QuestionEditRequestVM questionVM = questionService.getQuestionEditRequestVM(q.getId());
+                    questionVM.setItemOrder(titleItems.size() + 1);
+                    return questionVM;
+                }).collect(Collectors.toList()));
+            titleItems.add(singleChoiceTitle);
+        }
+
+        if (!multipleChoiceQuestions.isEmpty()) {
+            ExamPaperTitleItemVM multipleChoiceTitle = new ExamPaperTitleItemVM();
+            multipleChoiceTitle.setName("多选题");
+            multipleChoiceTitle.setQuestionItems(multipleChoiceQuestions.stream()
+                .map(q -> {
+                    QuestionEditRequestVM questionVM = questionService.getQuestionEditRequestVM(q.getId());
+                    questionVM.setItemOrder(titleItems.size() + 1);
+                    return questionVM;
+                }).collect(Collectors.toList()));
+            titleItems.add(multipleChoiceTitle);
+        }
+
+        if (!judgementQuestions.isEmpty()) {
+            ExamPaperTitleItemVM judgementTitle = new ExamPaperTitleItemVM();
+            judgementTitle.setName("判断题");
+            judgementTitle.setQuestionItems(judgementQuestions.stream()
+                .map(q -> {
+                    QuestionEditRequestVM questionVM = questionService.getQuestionEditRequestVM(q.getId());
+                    questionVM.setItemOrder(titleItems.size() + 1);
+                    return questionVM;
+                }).collect(Collectors.toList()));
+            titleItems.add(judgementTitle);
+        }
+
+        String frameTextContentStr = JsonUtil.toJsonStr(titleItems);
+        frameTextContent.setContent(frameTextContentStr);
+        textContentService.insertByFilter(frameTextContent);
+        examPaper.setFrameTextContentId(frameTextContent.getId());
+        examPaperMapper.updateByPrimaryKeySelective(examPaper);
+
+        return examPaper;
     }
 }

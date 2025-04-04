@@ -10,6 +10,7 @@ import com.can.easyquiz.utils.PageInfoHelper;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperEditRequestVM;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageResponseVM;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageVM;
+import com.can.easyquiz.viewmodel.paper.ExamPaperGenerateVM;
 import com.github.pagehelper.PageInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,12 @@ public class ExamPaperController extends ApiController {
             return vm;
         });
         return RestResponse.ok(page);
+    }
+
+    @RequestMapping(value = "/generate", method = RequestMethod.POST)
+    public RestResponse<ExamPaperEditRequestVM> generatePaper(@RequestBody @Valid ExamPaperGenerateVM model) {
+        ExamPaper examPaper = examPaperService.generateSmartPaper(model, getCurrentUser());
+        ExamPaperEditRequestVM vm = examPaperService.examPaperToVM(examPaper.getId());
+        return RestResponse.ok(vm);
     }
 }

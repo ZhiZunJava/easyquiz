@@ -6,7 +6,8 @@ import java.util.Map;
 public enum ExamPaperTypeEnum {
 
     Fixed(1, "固定试卷"),
-    TimeLimit(2, "时段试卷");
+    TimeLimit(2, "时段试卷"),
+    SmartTraining(3, "智能训练试卷");
 
     int code;
     String name;
