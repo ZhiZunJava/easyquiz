@@ -272,4 +272,34 @@
         </foreach>
     </update>
 
+    <select id="selectCorrectRateByGradeLevel" resultType="java.util.Map">
+        SELECT
+            s.level_name,
+            SUM(CASE WHEN a.do_right = 1 THEN 1 ELSE 0 END) AS doRightCount,
+            COUNT(a.id) AS totalCount
+        FROM
+            t_exam_paper_question_customer_answer a
+            JOIN t_question q ON a.question_id = q.id
+            JOIN t_subject s ON q.subject_id = s.id
+        GROUP BY
+            q.grade_level, s.level_name
+        ORDER BY
+            q.grade_level
+    </select>
+
+    <select id="selectCorrectRateBySubject" resultType="java.util.Map">
+        SELECT
+            s.name AS subjectName,
+            SUM(CASE WHEN a.do_right = 1 THEN 1 ELSE 0 END) AS doRightCount,
+            COUNT(a.id) AS totalCount
+        FROM
+            t_exam_paper_question_customer_answer a
+            JOIN t_question q ON a.question_id = q.id
+            JOIN t_subject s ON q.subject_id = s.id
+        GROUP BY
+            q.subject_id, s.name
+        ORDER BY
+            q.subject_id
+    </select>
+
 </mapper>

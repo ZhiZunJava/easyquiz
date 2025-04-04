@@ -241,4 +241,87 @@
         LIMIT #{count}
     </select>
 
+    <select id="selectCountByGradeLevel" resultType="com.can.easyquiz.domain.KeyValue">
+        SELECT
+          s.level_name AS name,
+          COUNT(q.id) AS value
+        FROM
+          t_question q
+          LEFT JOIN t_subject s ON q.subject_id = s.id
+        WHERE
+          q.deleted = 0
+        GROUP BY
+          q.grade_level, s.level_name
+        ORDER BY
+          q.grade_level
+    </select>
+
+    <select id="selectCountBySubject" resultType="com.can.easyquiz.domain.KeyValue">
+        SELECT
+          s.name AS name,
+          COUNT(q.id) AS value
+        FROM
+          t_question q
+          LEFT JOIN t_subject s ON q.subject_id = s.id
+        WHERE
+          q.deleted = 0
+        GROUP BY
+          q.subject_id, s.name
+        ORDER BY
+          q.subject_id
+    </select>
+
+    <select id="selectCountByType" resultType="com.can.easyquiz.domain.KeyValue">
+        SELECT
+          CAST(question_type AS CHAR) AS name,
+          COUNT(id) AS value
+        FROM
+          t_question
+        WHERE
+          deleted = 0
+        GROUP BY
+          question_type
+        ORDER BY
+          question_type
+    </select>
+
+    <select id="selectCountByDifficulty" resultType="com.can.easyquiz.domain.KeyValue">
+        SELECT
+          CAST(difficult AS CHAR) AS name,
+          COUNT(id) AS value
+        FROM
+          t_question
+        WHERE
+          deleted = 0
+        GROUP BY
+          difficult
+        ORDER BY
+          difficult
+    </select>
+
+    <select id="selectHotQuestions" resultType="java.util.Map">
+        SELECT
+          q.id,
+          q.subject_id,
+          s.name AS subject_name,
+          q.question_type,
+          q.grade_level,
+          s.level_name,
+          tc.content AS title_content,
+          COUNT(epqca.id) AS answer_count,
+          SUM(CASE WHEN epqca.do_right = 1 THEN 1 ELSE 0 END) AS right_count
+        FROM
+          t_question q
+          LEFT JOIN t_subject s ON q.subject_id = s.id
+          LEFT JOIN t_text_content tc ON q.info_text_content_id = tc.id
+          LEFT JOIN t_exam_paper_question_customer_answer epqca ON q.id = epqca.question_id
+        WHERE
+          q.deleted = 0
+        GROUP BY
+          q.id, q.subject_id, s.name, q.question_type, q.grade_level, s.level_name, tc.content
+        ORDER BY
+          answer_count DESC
+        LIMIT #{limit}
+    </select>
+
 </mapper>

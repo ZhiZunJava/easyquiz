@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController("AdminDashboardController")
@@ -35,6 +36,7 @@ public class DashboardController extends ApiController {
     public RestResponse<IndexVM> Index() {
         IndexVM vm = new IndexVM();
 
+        // 基础统计信息
         Integer examPaperCount = examPaperService.selectAllCount();
         Integer questionCount = questionService.selectAllCount();
         Integer doExamPaperCount = examPaperAnswerService.selectAllCount();
@@ -44,6 +46,34 @@ public class DashboardController extends ApiController {
         vm.setQuestionCount(questionCount);
         vm.setDoExamPaperCount(doExamPaperCount);
         vm.setDoQuestionCount(doQuestionCount);
+        
+        // 按年级统计题目数量
+        Map<String, Integer> questionCountByGradeLevel = questionService.selectCountByGradeLevel();
+        vm.setQuestionCountByGradeLevel(questionCountByGradeLevel);
+        
+        // 按学科统计题目数量
+        Map<String, Integer> questionCountBySubject = questionService.selectCountBySubject();
+        vm.setQuestionCountBySubject(questionCountBySubject);
+        
+        // 按题目类型统计数量
+        Map<String, Integer> questionCountByType = questionService.selectCountByType();
+        vm.setQuestionCountByType(questionCountByType);
+        
+        // 按难度统计题目数量
+        Map<String, Integer> questionCountByDifficulty = questionService.selectCountByDifficulty();
+        vm.setQuestionCountByDifficulty(questionCountByDifficulty);
+        
+        // 按年级统计正确率
+        Map<String, Double> correctRateByGradeLevel = examPaperQuestionCustomerAnswerService.selectCorrectRateByGradeLevel();
+        vm.setCorrectRateByGradeLevel(correctRateByGradeLevel);
+        
+        // 按学科统计正确率
+        Map<String, Double> correctRateBySubject = examPaperQuestionCustomerAnswerService.selectCorrectRateBySubject();
+        vm.setCorrectRateBySubject(correctRateBySubject);
+        
+        // 获取热门题目TOP 5
+        List<Map<String, Object>> hotQuestions = questionService.selectHotQuestions(5);
+        vm.setHotQuestions(hotQuestions);
 
         return RestResponse.ok(vm);
     }

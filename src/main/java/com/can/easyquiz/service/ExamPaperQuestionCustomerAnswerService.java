@@ -7,6 +7,7 @@ import com.can.easyquiz.viewmodel.student.question.QuestionPageStudentRequestVM;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ExamPaperQuestionCustomerAnswerService extends BasicService<ExamPaperQuestionCustomerAnswer>{
     PageInfo<ExamPaperQuestionCustomerAnswer> studentPage(QuestionPageStudentRequestVM requestVM);
@@ -34,4 +35,16 @@ public interface ExamPaperQuestionCustomerAnswerService extends BasicService<Exa
     List<Integer> selectMothCount();
 
     int updateScore(List<ExamPaperAnswerUpdate> examPaperAnswerUpdates);
+    
+    /**
+     * 按年级统计题目正确率
+     * @return 年级-正确率映射
+     */
+    Map<String, Double> selectCorrectRateByGradeLevel();
+    
+    /**
+     * 按学科统计题目正确率
+     * @return 学科-正确率映射
+     */
+    Map<String, Double> selectCorrectRateBySubject();
 }

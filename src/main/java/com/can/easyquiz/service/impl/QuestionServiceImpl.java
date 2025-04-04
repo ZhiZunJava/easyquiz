@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,5 +186,49 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements Qu
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Map<String, Integer> selectCountByGradeLevel() {
+        List<KeyValue> countByGradeLevel = questionMapper.selectCountByGradeLevel();
+        Map<String, Integer> result = new HashMap<>();
+        for (KeyValue keyValue : countByGradeLevel) {
+            result.put(keyValue.getName(), keyValue.getValue());
+        }
+        return result;
+    }
 
+    @Override
+    public Map<String, Integer> selectCountBySubject() {
+        List<KeyValue> countBySubject = questionMapper.selectCountBySubject();
+        Map<String, Integer> result = new HashMap<>();
+        for (KeyValue keyValue : countBySubject) {
+            result.put(keyValue.getName(), keyValue.getValue());
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Integer> selectCountByType() {
+        List<KeyValue> countByType = questionMapper.selectCountByType();
+        Map<String, Integer> result = new HashMap<>();
+        for (KeyValue keyValue : countByType) {
+            String typeName = QuestionTypeEnum.fromCode(Integer.parseInt(keyValue.getName())).getName();
+            result.put(typeName, keyValue.getValue());
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Integer> selectCountByDifficulty() {
+        List<KeyValue> countByDifficulty = questionMapper.selectCountByDifficulty();
+        Map<String, Integer> result = new HashMap<>();
+        for (KeyValue keyValue : countByDifficulty) {
+            result.put(keyValue.getName(), keyValue.getValue());
+        }
+        return result;
+    }
+
+    @Override
+    public List<Map<String, Object>> selectHotQuestions(int limit) {
+        return questionMapper.selectHotQuestions(limit);
+    }
 }

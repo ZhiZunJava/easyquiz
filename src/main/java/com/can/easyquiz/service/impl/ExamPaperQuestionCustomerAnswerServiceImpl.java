@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -87,6 +89,46 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
     @Override
     public int updateScore(List<ExamPaperAnswerUpdate> examPaperAnswerUpdates) {
         return examPaperQuestionCustomerAnswerMapper.updateScore(examPaperAnswerUpdates);
+    }
+
+    @Override
+    public Map<String, Double> selectCorrectRateByGradeLevel() {
+        List<Map<String, Object>> correctRateByGradeLevel = examPaperQuestionCustomerAnswerMapper.selectCorrectRateByGradeLevel();
+        Map<String, Double> result = new HashMap<>();
+        for (Map<String, Object> item : correctRateByGradeLevel) {
+            String gradeLevelName = (String) item.get("levelName");
+            Double correctRate = calculateCorrectRate(item);
+            result.put(gradeLevelName, correctRate);
+        }
+        return result;
+    }
+    
+    @Override
+    public Map<String, Double> selectCorrectRateBySubject() {
+        List<Map<String, Object>> correctRateBySubject = examPaperQuestionCustomerAnswerMapper.selectCorrectRateBySubject();
+        Map<String, Double> result = new HashMap<>();
+        for (Map<String, Object> item : correctRateBySubject) {
+            String subjectName = (String) item.get("subjectName");
+            Double correctRate = calculateCorrectRate(item);
+            result.put(subjectName, correctRate);
+        }
+        return result;
+    }
+    
+    /**
+     * 计算正确率
+     * @param item 包含doRightCount和totalCount的Map
+     * @return 正确率，保留两位小数
+     */
+    private Double calculateCorrectRate(Map<String, Object> item) {
+        Long doRightCount = (Long) item.get("doRightCount");
+        Long totalCount = (Long) item.get("totalCount");
+        if (totalCount == 0) {
+            return 0.0;
+        }
+        double rate = (double) doRightCount / totalCount * 100;
+        // 保留两位小数
+        return Math.round(rate * 100) / 100.0;
     }
 
     private void setSpecialToVM(ExamPaperSubmitItemVM examPaperSubmitItemVM, ExamPaperQuestionCustomerAnswer examPaperQuestionCustomerAnswer) {

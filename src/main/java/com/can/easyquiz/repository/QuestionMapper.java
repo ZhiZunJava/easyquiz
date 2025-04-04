@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface QuestionMapper extends BasicMapper<Question> {
@@ -35,4 +36,35 @@ public interface QuestionMapper extends BasicMapper<Question> {
         @Param("difficulty") Integer difficulty,
         @Param("count") Integer count
     );
+    
+    /**
+     * 按年级统计题目数量
+     * @return 年级名称和数量的键值对列表
+     */
+    List<KeyValue> selectCountByGradeLevel();
+    
+    /**
+     * 按学科统计题目数量
+     * @return 学科名称和数量的键值对列表
+     */
+    List<KeyValue> selectCountBySubject();
+    
+    /**
+     * 按题目类型统计数量
+     * @return 题目类型和数量的键值对列表
+     */
+    List<KeyValue> selectCountByType();
+    
+    /**
+     * 按难度统计题目数量
+     * @return 难度等级和数量的键值对列表
+     */
+    List<KeyValue> selectCountByDifficulty();
+    
+    /**
+     * 获取热门题目（被答题次数最多的题目）
+     * @param limit 数量限制
+     * @return 热门题目列表
+     */
+    List<Map<String, Object>> selectHotQuestions(@Param("limit") int limit);
 }
