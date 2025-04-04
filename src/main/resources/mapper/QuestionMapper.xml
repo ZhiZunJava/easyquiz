@@ -256,21 +256,6 @@
           q.grade_level
     </select>
 
-    <select id="selectCountBySubject" resultType="com.can.easyquiz.domain.KeyValue">
-        SELECT
-          s.name AS name,
-          COUNT(q.id) AS value
-        FROM
-          t_question q
-          LEFT JOIN t_subject s ON q.subject_id = s.id
-        WHERE
-          q.deleted = 0
-        GROUP BY
-          q.subject_id, s.name
-        ORDER BY
-          q.subject_id
-    </select>
-
     <select id="selectCountByType" resultType="com.can.easyquiz.domain.KeyValue">
         SELECT
           CAST(question_type AS CHAR) AS name,

@@ -51,10 +51,6 @@ public class DashboardController extends ApiController {
         Map<String, Integer> questionCountByGradeLevel = questionService.selectCountByGradeLevel();
         vm.setQuestionCountByGradeLevel(questionCountByGradeLevel);
         
-        // 按学科统计题目数量
-        Map<String, Integer> questionCountBySubject = questionService.selectCountBySubject();
-        vm.setQuestionCountBySubject(questionCountBySubject);
-        
         // 按题目类型统计数量
         Map<String, Integer> questionCountByType = questionService.selectCountByType();
         vm.setQuestionCountByType(questionCountByType);
@@ -67,9 +63,9 @@ public class DashboardController extends ApiController {
         Map<String, Double> correctRateByGradeLevel = examPaperQuestionCustomerAnswerService.selectCorrectRateByGradeLevel();
         vm.setCorrectRateByGradeLevel(correctRateByGradeLevel);
         
-        // 按学科统计正确率
-        Map<String, Double> correctRateBySubject = examPaperQuestionCustomerAnswerService.selectCorrectRateBySubject();
-        vm.setCorrectRateBySubject(correctRateBySubject);
+        // 按难度统计正确率
+        Map<String, Double> correctRateByDifficulty = examPaperQuestionCustomerAnswerService.selectCorrectRateByDifficulty();
+        vm.setCorrectRateByDifficulty(correctRateByDifficulty);
         
         // 获取热门题目TOP 5
         List<Map<String, Object>> hotQuestions = questionService.selectHotQuestions(5);

@@ -44,12 +44,6 @@ public interface QuestionMapper extends BasicMapper<Question> {
     List<KeyValue> selectCountByGradeLevel();
     
     /**
-     * 按学科统计题目数量
-     * @return 学科名称和数量的键值对列表
-     */
-    List<KeyValue> selectCountBySubject();
-    
-    /**
      * 按题目类型统计数量
      * @return 题目类型和数量的键值对列表
      */

@@ -29,13 +29,7 @@ public interface QuestionService extends BasicService<Question> {
      * @return 年级-数量映射
      */
     Map<String, Integer> selectCountByGradeLevel();
-    
-    /**
-     * 按学科统计题目数量
-     * @return 学科-数量映射
-     */
-    Map<String, Integer> selectCountBySubject();
-    
+
     /**
      * 按题目类型统计数量
      * @return 题型-数量映射

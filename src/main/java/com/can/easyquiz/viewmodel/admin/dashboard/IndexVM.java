@@ -11,10 +11,7 @@ public class IndexVM {
     
     // 按年级统计的题目数量
     private Map<String, Integer> questionCountByGradeLevel;
-    
-    // 按学科统计的题目数量
-    private Map<String, Integer> questionCountBySubject;
-    
+
     // 按题目类型统计的数量
     private Map<String, Integer> questionCountByType;
     
@@ -22,7 +19,7 @@ public class IndexVM {
     private Map<String, Double> correctRateByGradeLevel;
     
     // 按学科统计的正确率
-    private Map<String, Double> correctRateBySubject;
+    private Map<String, Double> correctRateByDifficulty;
     
     // 难度分布统计
     private Map<String, Integer> questionCountByDifficulty;
@@ -70,14 +67,6 @@ public class IndexVM {
         this.questionCountByGradeLevel = questionCountByGradeLevel;
     }
 
-    public Map<String, Integer> getQuestionCountBySubject() {
-        return questionCountBySubject;
-    }
-
-    public void setQuestionCountBySubject(Map<String, Integer> questionCountBySubject) {
-        this.questionCountBySubject = questionCountBySubject;
-    }
-
     public Map<String, Integer> getQuestionCountByType() {
         return questionCountByType;
     }
@@ -94,12 +83,12 @@ public class IndexVM {
         this.correctRateByGradeLevel = correctRateByGradeLevel;
     }
 
-    public Map<String, Double> getCorrectRateBySubject() {
-        return correctRateBySubject;
+    public Map<String, Double> getCorrectRateByDifficulty() {
+        return correctRateByDifficulty;
     }
 
-    public void setCorrectRateBySubject(Map<String, Double> correctRateBySubject) {
-        this.correctRateBySubject = correctRateBySubject;
+    public void setCorrectRateByDifficulty(Map<String, Double> correctRateByDifficulty) {
+        this.correctRateByDifficulty = correctRateByDifficulty;
     }
 
     public Map<String, Integer> getQuestionCountByDifficulty() {

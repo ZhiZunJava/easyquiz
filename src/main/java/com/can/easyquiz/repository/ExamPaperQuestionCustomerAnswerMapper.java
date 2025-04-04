@@ -35,5 +35,5 @@ public interface ExamPaperQuestionCustomerAnswerMapper extends BasicMapper<ExamP
      * 按学科统计正确率
      * @return 包含学科名称、正确数量和总数量的列表
      */
-    List<Map<String, Object>> selectCorrectRateBySubject();
+    List<Map<String, Object>> selectCorrectRateByDifficulty();
 }

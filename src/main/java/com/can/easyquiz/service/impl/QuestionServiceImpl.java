@@ -197,16 +197,6 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements Qu
     }
 
     @Override
-    public Map<String, Integer> selectCountBySubject() {
-        List<KeyValue> countBySubject = questionMapper.selectCountBySubject();
-        Map<String, Integer> result = new HashMap<>();
-        for (KeyValue keyValue : countBySubject) {
-            result.put(keyValue.getName(), keyValue.getValue());
-        }
-        return result;
-    }
-
-    @Override
     public Map<String, Integer> selectCountByType() {
         List<KeyValue> countByType = questionMapper.selectCountByType();
         Map<String, Integer> result = new HashMap<>();

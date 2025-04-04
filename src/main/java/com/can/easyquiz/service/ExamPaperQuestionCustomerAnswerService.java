@@ -46,5 +46,5 @@ public interface ExamPaperQuestionCustomerAnswerService extends BasicService<Exa
      * 按学科统计题目正确率
      * @return 学科-正确率映射
      */
-    Map<String, Double> selectCorrectRateBySubject();
+    Map<String, Double> selectCorrectRateByDifficulty();
 }

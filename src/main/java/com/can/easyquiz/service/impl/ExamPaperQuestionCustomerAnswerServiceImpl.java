@@ -96,7 +96,7 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
         List<Map<String, Object>> correctRateByGradeLevel = examPaperQuestionCustomerAnswerMapper.selectCorrectRateByGradeLevel();
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Object> item : correctRateByGradeLevel) {
-            String gradeLevelName = (String) item.get("levelName");
+            String gradeLevelName = (String) item.get("level");
             Double correctRate = calculateCorrectRate(item);
             result.put(gradeLevelName, correctRate);
         }
@@ -104,11 +104,11 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
     }
     
     @Override
-    public Map<String, Double> selectCorrectRateBySubject() {
-        List<Map<String, Object>> correctRateBySubject = examPaperQuestionCustomerAnswerMapper.selectCorrectRateBySubject();
+    public Map<String, Double> selectCorrectRateByDifficulty() {
+        List<Map<String, Object>> correctRateBySubject = examPaperQuestionCustomerAnswerMapper.selectCorrectRateByDifficulty();
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Object> item : correctRateBySubject) {
-            String subjectName = (String) item.get("subjectName");
+            String subjectName = (String) item.get("difficult");
             Double correctRate = calculateCorrectRate(item);
             result.put(subjectName, correctRate);
         }
