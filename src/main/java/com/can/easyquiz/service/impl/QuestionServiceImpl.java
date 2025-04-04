@@ -211,8 +211,7 @@ public class QuestionServiceImpl extends BaseServiceImpl<Question> implements Qu
         List<KeyValue> countByType = questionMapper.selectCountByType();
         Map<String, Integer> result = new HashMap<>();
         for (KeyValue keyValue : countByType) {
-            String typeName = QuestionTypeEnum.fromCode(Integer.parseInt(keyValue.getName())).getName();
-            result.put(typeName, keyValue.getValue());
+            result.put(keyValue.getName(), keyValue.getValue());
         }
         return result;
     }

@@ -92,8 +92,8 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/api/user/logout")
                         .logoutSuccessHandler(restLogoutSuccessHandler)
-                        .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 // 配置记住我功能
                 .rememberMe(rememberMe -> rememberMe

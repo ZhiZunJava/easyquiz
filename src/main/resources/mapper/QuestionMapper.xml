@@ -243,7 +243,7 @@
 
     <select id="selectCountByGradeLevel" resultType="com.can.easyquiz.domain.KeyValue">
         SELECT
-          s.level_name AS name,
+          s.level AS name,
           COUNT(q.id) AS value
         FROM
           t_question q
@@ -251,7 +251,7 @@
         WHERE
           q.deleted = 0
         GROUP BY
-          q.grade_level, s.level_name
+          q.grade_level, s.level
         ORDER BY
           q.grade_level
     </select>
