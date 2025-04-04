@@ -85,23 +85,8 @@ public class ExamPaperAnswerController extends ApiController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     public RestResponse edit(@RequestBody @Valid ExamPaperSubmitVM examPaperSubmitVM) {
-        boolean notJudge = examPaperSubmitVM.getAnswerItems().stream().anyMatch(i -> i.getDoRight() == null && i.getScore() == null);
-        if (notJudge) {
-            return RestResponse.fail(2, "有未批改题目");
-        }
-
-        ExamPaperAnswer examPaperAnswer = examPaperAnswerService.selectById(examPaperSubmitVM.getId());
-        ExamPaperAnswerStatusEnum examPaperAnswerStatusEnum = ExamPaperAnswerStatusEnum.fromCode(examPaperAnswer.getStatus());
-        if (examPaperAnswerStatusEnum == ExamPaperAnswerStatusEnum.Complete) {
-            return RestResponse.fail(3, "试卷已完成");
-        }
-        String score = examPaperAnswerService.judge(examPaperSubmitVM);
-        User user = getCurrentUser();
-        UserEventLog userEventLog = new UserEventLog(user.getId(), user.getUserName(), user.getRealName(), new Date());
-        String content = user.getUserName() + " 批改试卷：" + examPaperAnswer.getPaperName() + " 得分：" + score;
-        userEventLog.setContent(content);
-        eventPublisher.publishEvent(new UserEvent(userEventLog));
-        return RestResponse.ok(score);
+        // 限制学生自主批改试卷功能
+        return RestResponse.fail(4, "学生不允许批改试卷，请等待老师批改");
     }
 
     @RequestMapping(value = "/read/{id}", method = RequestMethod.POST)

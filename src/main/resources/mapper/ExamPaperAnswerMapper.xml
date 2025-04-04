@@ -248,6 +248,9 @@
             <if test="subjectId != null">
                 and subject_id = #{subjectId}
             </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
         </where>
     </select>
 

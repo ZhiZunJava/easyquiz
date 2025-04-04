@@ -68,8 +68,8 @@ public class DashboardController extends ApiController {
         vm.setCorrectRateByDifficulty(correctRateByDifficulty);
         
         // 获取热门题目TOP 5
-        List<Map<String, Object>> hotQuestions = questionService.selectHotQuestions(5);
-        vm.setHotQuestions(hotQuestions);
+        // List<Map<String, Object>> hotQuestions = questionService.selectHotQuestions(5);
+        // vm.setHotQuestions(hotQuestions);
 
         return RestResponse.ok(vm);
     }
