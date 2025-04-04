@@ -1,11 +1,15 @@
 package com.can.easyquiz.viewmodel.admin.user;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 public class UserEventLogVM {
 
     private Integer id;
 
     private Integer userId;
 
+    @NotBlank
     private String userName;
 
     private String realName;
