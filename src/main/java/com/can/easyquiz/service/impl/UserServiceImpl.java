@@ -1,12 +1,13 @@
 package com.can.easyquiz.service.impl;
 
+import com.can.easyquiz.config.property.SystemConfig;
 import com.can.easyquiz.domain.KeyValue;
 import com.can.easyquiz.domain.User;
 import com.can.easyquiz.event.OnRegistrationCompleteEvent;
 import com.can.easyquiz.exception.BusinessException;
 import com.can.easyquiz.repository.UserMapper;
 import com.can.easyquiz.service.UserService;
-import com.can.easyquiz.service.AuthenticationService;
+import com.can.easyquiz.utils.RsaUtil;
 import com.can.easyquiz.viewmodel.admin.user.UserPageRequestVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,14 +25,14 @@ import java.util.Date;
 public class UserServiceImpl extends BaseServiceImpl<User> implements UserService {
 
     private final UserMapper userMapper;
-    private final AuthenticationService authenticationService;
     private final ApplicationEventPublisher eventPublisher;
+    private final SystemConfig systemConfig;
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper, AuthenticationService authenticationService, ApplicationEventPublisher eventPublisher) {
+    public UserServiceImpl(UserMapper userMapper, SystemConfig systemConfig, ApplicationEventPublisher eventPublisher) {
         super(userMapper);
         this.userMapper = userMapper;
-        this.authenticationService = authenticationService;
+        this.systemConfig = systemConfig;
         this.eventPublisher = eventPublisher;
     }
 
@@ -164,13 +165,13 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
         }
 
         // 验证旧密码
-        String decodedOldPassword = authenticationService.pwdDecode(user.getPassword());
+        String decodedOldPassword = RsaUtil.rsaDecode(systemConfig.getPwdKey().getPrivateKey(), oldPassword);
         if (!oldPassword.equals(decodedOldPassword)) {
             return false;
         }
 
         // 加密新密码
-        String encodedNewPassword = authenticationService.pwdEncode(newPassword);
+        String encodedNewPassword = RsaUtil.rsaEncode(systemConfig.getPwdKey().getPublicKey(), newPassword);
         user.setPassword(encodedNewPassword);
         user.setModifyTime(new Date());
         
