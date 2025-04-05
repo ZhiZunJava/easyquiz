@@ -309,6 +309,9 @@
             <if test="userName != null and userName != ''">
                 and user_name like concat('%',#{userName},'%')
             </if>
+            <if test="userLevel != null and userLevel != ''">
+                and user_level = #{userLevel}
+            </if>
             <if test="role != null ">
                 and role= #{role}
             </if>
