@@ -5,6 +5,7 @@ import com.can.easyquiz.annotation.RestResponse;
 import com.can.easyquiz.domain.ExamPaper;
 import com.can.easyquiz.service.ExamPaperService;
 import com.can.easyquiz.utils.DateTimeUtil;
+import com.can.easyquiz.utils.ExamUtil;
 import com.can.easyquiz.utils.PageInfoHelper;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperEditRequestVM;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperPageRequestVM;
@@ -31,6 +32,7 @@ public class ExamPaperController extends ApiController {
         PageInfo<ExamPaper> pageInfo = examPaperService.page(model);
         PageInfo<ExamResponseVM> page = PageInfoHelper.copyMap(pageInfo, e -> {
             ExamResponseVM vm = modelMapper.map(e, ExamResponseVM.class);
+            vm.setScoreStr(ExamUtil.scoreToVM(e.getScore()));
             vm.setCreateTime(DateTimeUtil.dateFormat(e.getCreateTime()));
             return vm;
         });

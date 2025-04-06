@@ -9,6 +9,7 @@ import com.can.easyquiz.service.QuestionService;
 import com.can.easyquiz.service.TextContentService;
 import com.can.easyquiz.service.UserService;
 import com.can.easyquiz.utils.DateTimeUtil;
+import com.can.easyquiz.utils.ExamUtil;
 import com.can.easyquiz.viewmodel.student.dashboard.IndexVM;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperFilter;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfo;
@@ -50,7 +51,13 @@ public class DashboardController extends ApiController {
         PaperFilter fixedPaperFilter = new PaperFilter();
         fixedPaperFilter.setGradeLevel(user.getUserLevel());
         fixedPaperFilter.setExamPaperType(ExamPaperTypeEnum.Fixed.getCode());
-        indexVM.setFixedPaper(examPaperService.indexPaper(fixedPaperFilter));
+        List<PaperInfo> fixedPaper = examPaperService.indexPaper(fixedPaperFilter);
+        List<PaperInfo> paperInfoVM = fixedPaper.stream().map(d -> {
+            PaperInfo vm = modelMapper.map(d, PaperInfo.class);
+            vm.setScoreStr(ExamUtil.scoreToVM(d.getScore()));
+            return vm;
+        }).collect(Collectors.toList());
+        indexVM.setFixedPaper(paperInfoVM);
 
         PaperFilter timeLimitPaperFilter = new PaperFilter();
         timeLimitPaperFilter.setDateTime(new Date());
@@ -62,6 +69,7 @@ public class DashboardController extends ApiController {
             PaperInfoVM vm = modelMapper.map(d, PaperInfoVM.class);
             vm.setStartTime(DateTimeUtil.dateFormat(d.getLimitStartTime()));
             vm.setEndTime(DateTimeUtil.dateFormat(d.getLimitEndTime()));
+            vm.setScoreStr(ExamUtil.scoreToVM(d.getScore()));
             return vm;
         }).collect(Collectors.toList());
         indexVM.setTimeLimitPaper(paperInfoVMS);

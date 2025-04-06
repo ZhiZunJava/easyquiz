@@ -8,6 +8,7 @@ public class ExamResponseVM {
     private Integer questionCount;
 
     private Integer score;
+    private String scoreStr;
 
     private String createTime;
 
@@ -89,5 +90,13 @@ public class ExamResponseVM {
 
     public void setFrameTextContentId(Integer frameTextContentId) {
         this.frameTextContentId = frameTextContentId;
+    }
+
+    public String getScoreStr() {
+        return scoreStr;
+    }
+
+    public void setScoreStr(String scoreStr) {
+        this.scoreStr = scoreStr;
     }
 }

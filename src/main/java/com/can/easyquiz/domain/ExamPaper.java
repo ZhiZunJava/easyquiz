@@ -32,6 +32,7 @@ public class ExamPaper implements Serializable {
      * 试卷总分(千分制)
      */
     private Integer score;
+    private String scoreStr;
 
     /**
      * 题目数量
@@ -174,5 +175,13 @@ public class ExamPaper implements Serializable {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public String getScoreStr() {
+        return scoreStr;
+    }
+
+    public void setScoreStr(String scoreStr) {
+        this.scoreStr = scoreStr;
     }
 }

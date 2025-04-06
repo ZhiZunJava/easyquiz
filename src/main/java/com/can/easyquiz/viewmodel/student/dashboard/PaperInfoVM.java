@@ -1,8 +1,6 @@
 package com.can.easyquiz.viewmodel.student.dashboard;
 
-import com.github.pagehelper.PageInfo;
-
-public class PaperInfoVM extends PageInfo {
+public class PaperInfoVM extends PaperInfo {
     private String startTime;
     private String endTime;
 

@@ -9,6 +9,7 @@ public class PaperInfo {
     private Date limitEndTime;
     private Integer gradeLevel;
     private Integer score;
+    private String scoreStr;
     private Integer suggestTime;
     private Integer questionCount;
     private Integer subjectId;
@@ -83,5 +84,13 @@ public class PaperInfo {
 
     public void setGradeLevel(Integer gradeLevel) {
         this.gradeLevel = gradeLevel;
+    }
+
+    public String getScoreStr() {
+        return scoreStr;
+    }
+
+    public void setScoreStr(String scoreStr) {
+        this.scoreStr = scoreStr;
     }
 }
