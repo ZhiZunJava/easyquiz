@@ -373,7 +373,7 @@
 
 
     <select id="selectByUserName"  resultType="com.can.easyquiz.domain.KeyValue">
-        SELECT  id as value,user_name as name
+        SELECT id as value,user_name as name
         from t_user
         where deleted=0  and user_name like concat('%',#{value},'%')
         limit 5

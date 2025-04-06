@@ -142,8 +142,8 @@ public class UserController extends ApiController {
     }
 
     @RequestMapping(value = "/selectByUserName", method = RequestMethod.POST)
-    public RestResponse<List<KeyValue>> selectByUserName(@RequestBody String userName) {
-        List<KeyValue> keyValues = userService.selectByUserName(userName);
+    public RestResponse<List<KeyValue>> selectByUserName(@RequestBody UserSearchVM model) {
+        List<KeyValue> keyValues = userService.selectByUserName(model.getName());
         return RestResponse.ok(keyValues);
     }
 
