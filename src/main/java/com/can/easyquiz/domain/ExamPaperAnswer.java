@@ -71,8 +71,6 @@ public class ExamPaperAnswer implements Serializable {
      */
     private Date createTime;
 
-    private Integer taskExamId;
-
     public Integer getId() {
         return id;
     }

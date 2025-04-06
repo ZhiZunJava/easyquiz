@@ -211,7 +211,6 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-
     <select id="selectListByPaperAnswerId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -219,7 +218,6 @@
         where exam_paper_answer_id = #{id,jdbcType=INTEGER}
         order by item_order
     </select>
-
 
     <select id="studentPage" resultMap="BaseResultMap" parameterType="com.can.easyquiz.viewmodel.student.question.QuestionPageStudentRequestVM">
         SELECT
@@ -230,7 +228,6 @@
             and create_user=#{createUser}
         </where>
     </select>
-
 
     <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id" >
         insert into t_exam_paper_question_customer_answer ( question_id, question_score,
@@ -249,11 +246,9 @@
         </foreach>
     </insert>
 
-
     <select id="selectAllCount"  resultType="java.lang.Integer">
         SELECT count(*) from t_exam_paper_question_customer_answer
     </select>
-
 
     <select id="selectCountByDate"  resultType="com.can.easyquiz.domain.KeyValue">
         SELECT create_time as name,COUNT(create_time) as value from

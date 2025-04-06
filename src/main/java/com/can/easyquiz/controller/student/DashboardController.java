@@ -13,6 +13,7 @@ import com.can.easyquiz.viewmodel.student.dashboard.IndexVM;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperFilter;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfo;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfoVM;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,7 @@ public class DashboardController extends ApiController {
     public RestResponse<IndexVM> index() {
         IndexVM indexVM = new IndexVM();
         User user = getCurrentUser();
+
 
         PaperFilter fixedPaperFilter = new PaperFilter();
         fixedPaperFilter.setGradeLevel(user.getUserLevel());

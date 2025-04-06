@@ -7,6 +7,7 @@ public class QuestionPageRequestVM extends BasePage {
     private Integer level;
     private Integer subjectId;
     private Integer questionType;
+    private Integer difficult;
     private String content;
 
 
@@ -48,5 +49,13 @@ public class QuestionPageRequestVM extends BasePage {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getDifficult() {
+        return difficult;
+    }
+
+    public void setDifficult(Integer difficult) {
+        this.difficult = difficult;
     }
 }
