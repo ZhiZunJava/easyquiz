@@ -125,15 +125,17 @@ public class UserController extends ApiController {
     public RestResponse<PageInfo<MessageResponseVM>> messagePageList(@RequestBody MessageRequestVM messageRequestVM) {
         messageRequestVM.setReceiveUserId(getCurrentUser().getId());
         PageInfo<MessageUser> messageUserPageInfo = messageService.studentPage(messageRequestVM);
-        List<Integer> ids = messageUserPageInfo.getList().stream().map(d -> d.getMessageId()).collect(Collectors.toList());
-        List<Message> messages = ids.size() != 0 ? messageService.selectMessageByIds(ids) : null;
+        List<Integer> ids = messageUserPageInfo.getList().stream().map(MessageUser::getMessageId).collect(Collectors.toList());
+        List<Message> messages = !ids.isEmpty() ? messageService.selectMessageByIds(ids) : null;
         PageInfo<MessageResponseVM> page = PageInfoHelper.copyMap(messageUserPageInfo, e -> {
             MessageResponseVM vm = modelMapper.map(e, MessageResponseVM.class);
-            messages.stream().filter(d -> e.getMessageId().equals(d.getId())).findFirst().ifPresent(message -> {
-                vm.setTitle(message.getTitle());
-                vm.setContent(message.getContent());
-                vm.setSendUserName(message.getSendUserName());
-            });
+            if (messages != null) {
+                messages.stream().filter(d -> e.getMessageId().equals(d.getId())).findFirst().ifPresent(message -> {
+                    vm.setTitle(message.getTitle());
+                    vm.setContent(message.getContent());
+                    vm.setSendUserName(message.getSendUserName());
+                });
+            }
             vm.setCreateTime(DateTimeUtil.dateFormat(e.getCreateTime()));
             return vm;
         });

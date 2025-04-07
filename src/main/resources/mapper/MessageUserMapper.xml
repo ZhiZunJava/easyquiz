@@ -156,7 +156,12 @@
         select
         <include refid="Base_Column_List" />
         from t_message_user
-        where  receive_user_id = #{receiveUserId}
+        <where>
+            receive_user_id = #{receiveUserId}
+            <if test="readed != null">
+                and readed = #{readed}
+            </if>
+        </where>
     </select>
 
 

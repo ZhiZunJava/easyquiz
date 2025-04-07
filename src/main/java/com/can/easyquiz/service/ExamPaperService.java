@@ -7,6 +7,7 @@ import com.can.easyquiz.viewmodel.admin.exam.ExamPaperPageRequestVM;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperFilter;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfo;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageVM;
+import com.can.easyquiz.viewmodel.student.exam.ExamPaperStudentVM;
 import com.can.easyquiz.viewmodel.paper.ExamPaperGenerateVM;
 import com.github.pagehelper.PageInfo;
 
@@ -21,6 +22,8 @@ public interface ExamPaperService extends BasicService<ExamPaper> {
     ExamPaper savePaperFromVM(ExamPaperEditRequestVM examPaperEditRequestVM, User user);
 
     ExamPaperEditRequestVM examPaperToVM(Integer id);
+    
+    ExamPaperStudentVM examPaperToStudentVM(Integer id);
 
     List<PaperInfo> indexPaper(PaperFilter paperFilter);
 

@@ -3,14 +3,17 @@ package com.can.easyquiz.controller.student;
 import com.can.easyquiz.annotation.ApiController;
 import com.can.easyquiz.annotation.RestResponse;
 import com.can.easyquiz.domain.ExamPaper;
+import com.can.easyquiz.enums.SystemCodeEnum;
 import com.can.easyquiz.service.ExamPaperAnswerService;
 import com.can.easyquiz.service.ExamPaperService;
 import com.can.easyquiz.utils.DateTimeUtil;
+import com.can.easyquiz.utils.ExamUtil;
 import com.can.easyquiz.utils.PageInfoHelper;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperEditRequestVM;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageResponseVM;
 import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageVM;
 import com.can.easyquiz.viewmodel.paper.ExamPaperGenerateVM;
+import com.can.easyquiz.viewmodel.student.exam.ExamPaperStudentVM;
 import com.github.pagehelper.PageInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +37,8 @@ public class ExamPaperController extends ApiController {
 
 
     @RequestMapping(value = "/select/{id}", method = RequestMethod.POST)
-    public RestResponse<ExamPaperEditRequestVM> select(@PathVariable Integer id) {
-        ExamPaperEditRequestVM vm = examPaperService.examPaperToVM(id);
+    public RestResponse<ExamPaperStudentVM> select(@PathVariable Integer id) {
+        ExamPaperStudentVM vm = examPaperService.examPaperToStudentVM(id);
         return RestResponse.ok(vm);
     }
 
@@ -46,6 +49,7 @@ public class ExamPaperController extends ApiController {
         PageInfo<ExamPaperPageResponseVM> page = PageInfoHelper.copyMap(pageInfo, e -> {
             ExamPaperPageResponseVM vm = modelMapper.map(e, ExamPaperPageResponseVM.class);
             vm.setCreateTime(DateTimeUtil.dateFormat(e.getCreateTime()));
+            vm.setScoreStr(ExamUtil.scoreToVM(e.getScore()));
             return vm;
         });
         return RestResponse.ok(page);

@@ -17,10 +17,11 @@ import com.can.easyquiz.utils.ModelMapperSingle;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperEditRequestVM;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperPageRequestVM;
 import com.can.easyquiz.viewmodel.admin.exam.ExamPaperTitleItemVM;
+import com.can.easyquiz.viewmodel.admin.question.QuestionEditItemVM;
 import com.can.easyquiz.viewmodel.admin.question.QuestionEditRequestVM;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperFilter;
 import com.can.easyquiz.viewmodel.student.dashboard.PaperInfo;
-import com.can.easyquiz.viewmodel.student.exam.ExamPaperPageVM;
+import com.can.easyquiz.viewmodel.student.exam.*;
 import com.can.easyquiz.viewmodel.paper.ExamPaperGenerateVM;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -106,22 +107,28 @@ public class ExamPaperServiceImpl extends BaseServiceImpl<ExamPaper> implements 
         vm.setLevel(examPaper.getGradeLevel());
         TextContent frameTextContent = textContentService.selectById(examPaper.getFrameTextContentId());
         List<ExamPaperTitleItemObject> examPaperTitleItemObjects = JsonUtil.toJsonListObject(frameTextContent.getContent(), ExamPaperTitleItemObject.class);
-        List<Integer> questionIds = examPaperTitleItemObjects.stream()
-                .flatMap(t -> t.getQuestionItems().stream()
-                        .map(q -> q.getId()))
-                .collect(Collectors.toList());
+        List<Integer> questionIds = null;
+        if (examPaperTitleItemObjects != null) {
+            questionIds = examPaperTitleItemObjects.stream()
+                    .flatMap(t -> t.getQuestionItems().stream()
+                            .map(ExamPaperQuestionItemObject::getId))
+                    .collect(Collectors.toList());
+        }
         List<Question> questions = questionMapper.selectByIds(questionIds);
-        List<ExamPaperTitleItemVM> examPaperTitleItemVMS = examPaperTitleItemObjects.stream().map(t -> {
-            ExamPaperTitleItemVM tTitleVM = modelMapper.map(t, ExamPaperTitleItemVM.class);
-            List<QuestionEditRequestVM> questionItemsVM = t.getQuestionItems().stream().map(i -> {
-                Question question = questions.stream().filter(q -> q.getId().equals(i.getId())).findFirst().get();
-                QuestionEditRequestVM questionEditRequestVM = questionService.getQuestionEditRequestVM(question);
-                questionEditRequestVM.setItemOrder(i.getItemOrder());
-                return questionEditRequestVM;
+        List<ExamPaperTitleItemVM> examPaperTitleItemVMS = null;
+        if (examPaperTitleItemObjects != null) {
+            examPaperTitleItemVMS = examPaperTitleItemObjects.stream().map(t -> {
+                ExamPaperTitleItemVM tTitleVM = modelMapper.map(t, ExamPaperTitleItemVM.class);
+                List<QuestionEditRequestVM> questionItemsVM = t.getQuestionItems().stream().map(i -> {
+                    Question question = questions.stream().filter(q -> q.getId().equals(i.getId())).findFirst().get();
+                    QuestionEditRequestVM questionEditRequestVM = questionService.getQuestionEditRequestVM(question);
+                    questionEditRequestVM.setItemOrder(i.getItemOrder());
+                    return questionEditRequestVM;
+                }).collect(Collectors.toList());
+                tTitleVM.setQuestionItems(questionItemsVM);
+                return tTitleVM;
             }).collect(Collectors.toList());
-            tTitleVM.setQuestionItems(questionItemsVM);
-            return tTitleVM;
-        }).collect(Collectors.toList());
+        }
         vm.setTitleItems(examPaperTitleItemVMS);
         vm.setScore(ExamUtil.scoreToVM(examPaper.getScore()));
         if (ExamPaperTypeEnum.TimeLimit == ExamPaperTypeEnum.fromCode(examPaper.getPaperType())) {
@@ -179,8 +186,13 @@ public class ExamPaperServiceImpl extends BaseServiceImpl<ExamPaper> implements 
     @Override
     @Transactional
     public ExamPaper generateSmartPaper(ExamPaperGenerateVM model, User user) {
+        int totalRequested = model.getSingleChoiceCount() + model.getMultipleChoiceCount() + model.getJudgementCount();
+        if (totalRequested == 0) {
+            throw new IllegalArgumentException("必须至少选择一个题型的题目数量");
+        }
         ExamPaper examPaper = new ExamPaper();
-        examPaper.setName(model.getName() != null ? model.getName() : "智能训练试卷");
+        examPaper.setName(model.getName() != null ? model.getName() :
+                "智能训练试卷" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
         examPaper.setSubjectId(model.getSubjectId());
         examPaper.setPaperType(ExamPaperTypeEnum.SmartTraining.getCode());
         examPaper.setGradeLevel(subjectService.levelBySubjectId(model.getSubjectId()));
@@ -195,13 +207,6 @@ public class ExamPaperServiceImpl extends BaseServiceImpl<ExamPaper> implements 
             model.getSubjectId(), QuestionTypeEnum.MultipleChoice.getCode(), model.getDifficulty(), model.getMultipleChoiceCount());
         List<Question> judgementQuestions = questionMapper.selectRandomQuestionsByTypeAndDifficulty(
             model.getSubjectId(), QuestionTypeEnum.TrueFalse.getCode(), model.getDifficulty(), model.getJudgementCount());
-
-        // 检查是否有足够的题目
-        if (singleChoiceQuestions.size() < model.getSingleChoiceCount() ||
-            multipleChoiceQuestions.size() < model.getMultipleChoiceCount() ||
-            judgementQuestions.size() < model.getJudgementCount()) {
-            throw new RuntimeException("题库中没有足够的题目，请调整题目数量或难度等级");
-        }
 
         // 计算总分
         int totalScore = singleChoiceQuestions.stream().mapToInt(Question::getScore).sum() +
@@ -264,10 +269,60 @@ public class ExamPaperServiceImpl extends BaseServiceImpl<ExamPaper> implements 
 
         String frameTextContentStr = JsonUtil.toJsonStr(titleItems);
         frameTextContent.setContent(frameTextContentStr);
+        frameTextContent.setCreateTime(new Date());
         textContentService.insertByFilter(frameTextContent);
         examPaper.setFrameTextContentId(frameTextContent.getId());
         examPaperMapper.updateByPrimaryKeySelective(examPaper);
 
         return examPaper;
+    }
+
+    @Override
+    public ExamPaperStudentVM examPaperToStudentVM(Integer id) {
+        ExamPaper examPaper = examPaperMapper.selectByPrimaryKey(id);
+        ExamPaperStudentVM vm = modelMapper.map(examPaper, ExamPaperStudentVM.class);
+        vm.setLevel(examPaper.getGradeLevel());
+        TextContent frameTextContent = textContentService.selectById(examPaper.getFrameTextContentId());
+        List<ExamPaperTitleItemObject> examPaperTitleItemObjects = JsonUtil.toJsonListObject(frameTextContent.getContent(), ExamPaperTitleItemObject.class);
+        List<Integer> questionIds = null;
+        if (examPaperTitleItemObjects != null) {
+            questionIds = examPaperTitleItemObjects.stream()
+                    .flatMap(t -> t.getQuestionItems().stream()
+                            .map(ExamPaperQuestionItemObject::getId))
+                    .collect(Collectors.toList());
+        }
+        List<Question> questions = questionMapper.selectByIds(questionIds);
+        List<ExamPaperTitleItemStudentVM> examPaperTitleItemVMS = null;
+        if (examPaperTitleItemObjects != null) {
+            examPaperTitleItemVMS = examPaperTitleItemObjects.stream().map(t -> {
+                ExamPaperTitleItemStudentVM tTitleVM = modelMapper.map(t, ExamPaperTitleItemStudentVM.class);
+                List<QuestionStudentVM> questionItemsVM = t.getQuestionItems().stream().map(i -> {
+                    Question question = questions.stream().filter(q -> q.getId().equals(i.getId())).findFirst().get();
+                    QuestionStudentVM questionStudentVM = modelMapper.map(question, QuestionStudentVM.class);
+                    TextContent questionInfoTextContent = textContentService.selectById(question.getInfoTextContentId());
+                    QuestionObject questionObject = JsonUtil.toJsonObject(questionInfoTextContent.getContent(), QuestionObject.class);
+                    questionStudentVM.setTitle(questionObject.getTitleContent());
+                    questionStudentVM.setAnalyze(questionObject.getAnalyze());
+                    questionStudentVM.setItems(questionObject.getQuestionItemObjects().stream().map(o -> {
+                        QuestionItemStudentVM questionItemStudentVM = modelMapper.map(o, QuestionItemStudentVM.class);
+                        if (o.getScore() != null) {
+                            questionItemStudentVM.setScore(ExamUtil.scoreToVM(o.getScore()));
+                        }
+                        return questionItemStudentVM;
+                    }).collect(Collectors.toList()));
+                    questionStudentVM.setItemOrder(i.getItemOrder());
+                    return questionStudentVM;
+                }).collect(Collectors.toList());
+                tTitleVM.setQuestionItems(questionItemsVM);
+                return tTitleVM;
+            }).collect(Collectors.toList());
+        }
+        vm.setTitleItems(examPaperTitleItemVMS);
+        vm.setScore(ExamUtil.scoreToVM(examPaper.getScore()));
+        if (ExamPaperTypeEnum.TimeLimit == ExamPaperTypeEnum.fromCode(examPaper.getPaperType())) {
+            List<String> limitDateTime = Arrays.asList(DateTimeUtil.dateFormat(examPaper.getLimitStartTime()), DateTimeUtil.dateFormat(examPaper.getLimitEndTime()));
+            vm.setLimitDateTime(limitDateTime);
+        }
+        return vm;
     }
 }
