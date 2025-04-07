@@ -32,18 +32,49 @@ public class UploadController extends ApiController {
 
     @RequestMapping("/image")
     @ResponseBody
-    public RestResponse questionUploadAndReadExcel(HttpServletRequest request) {
+    public RestResponse<String> questionUploadAndReadExcel(HttpServletRequest request) {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
         MultipartFile multipartFile = multipartHttpServletRequest.getFile("file");
+
+        if (multipartFile == null || multipartFile.isEmpty()) {
+            return RestResponse.fail(1, "请选择要上传的文件");
+        }
+
         long attachSize = multipartFile.getSize();
         String imgName = multipartFile.getOriginalFilename();
+
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            String filePath = fileUpload.saveFile(inputStream, attachSize, imgName);
-            userService.changePicture(getCurrentUser(), filePath);
-            return RestResponse.ok(filePath);
+            // 保存文件并获取相对路径
+            String relativePath = fileUpload.saveFile(inputStream, attachSize, imgName);
+
+            // 构建完整URL
+            String fullUrl = buildFullUrl(request, relativePath);
+
+            // 更新用户头像
+            userService.changePicture(getCurrentUser(), fullUrl);
+
+            return RestResponse.ok(fullUrl);
         } catch (IOException e) {
-            return RestResponse.fail(2, e.getMessage());
+            return RestResponse.fail(2, "文件处理失败: " + e.getMessage());
         }
+    }
+
+    private String buildFullUrl(HttpServletRequest request, String relativePath) {
+        String scheme = request.getScheme();             // http / https
+        String serverName = request.getServerName();     // 域名或IP
+        int serverPort = request.getServerPort();        // 端口
+        String contextPath = request.getContextPath();   // 应用上下文路径
+
+        // 处理默认端口（80/443不需要显示端口）
+        String portPart = (serverPort == 80 || serverPort == 443) ? "" : ":" + serverPort;
+
+        // 拼接完整URL
+        return String.format("%s://%s%s%s%s",
+                scheme,
+                serverName,
+                portPart,
+                contextPath,
+                relativePath.startsWith("/") ? relativePath : "/" + relativePath);
     }
 
 
