@@ -96,9 +96,9 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
         List<Map<String, Object>> correctRateByGradeLevel = examPaperQuestionCustomerAnswerMapper.selectCorrectRateByGradeLevel();
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Object> item : correctRateByGradeLevel) {
-            String gradeLevelName = (String) item.get("level");
+            Integer gradeLevelName = (Integer) item.get("level");
             Double correctRate = calculateCorrectRate(item);
-            result.put(gradeLevelName, correctRate);
+            result.put(String.valueOf(gradeLevelName), correctRate);
         }
         return result;
     }
@@ -108,9 +108,9 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
         List<Map<String, Object>> correctRateBySubject = examPaperQuestionCustomerAnswerMapper.selectCorrectRateByDifficulty();
         Map<String, Double> result = new HashMap<>();
         for (Map<String, Object> item : correctRateBySubject) {
-            String subjectName = (String) item.get("difficult");
+            Number difficult = (Number) item.get("difficult");
             Double correctRate = calculateCorrectRate(item);
-            result.put(subjectName, correctRate);
+            result.put(String.valueOf(difficult), correctRate);
         }
         return result;
     }
@@ -121,14 +121,21 @@ public class ExamPaperQuestionCustomerAnswerServiceImpl extends BaseServiceImpl<
      * @return 正确率，保留两位小数
      */
     private Double calculateCorrectRate(Map<String, Object> item) {
-        Long doRightCount = (Long) item.get("doRightCount");
-        Long totalCount = (Long) item.get("totalCount");
-        if (totalCount == 0) {
+        if (item == null) {
             return 0.0;
         }
-        double rate = (double) doRightCount / totalCount * 100;
-        // 保留两位小数
-        return Math.round(rate * 100) / 100.0;
+        
+        Number doRightCount = (Number) item.get("doRightCount");
+        Number totalCount = (Number) item.get("totalCount");
+        
+        if (doRightCount == null || totalCount == null || totalCount.longValue() == 0) {
+            return 0.0;
+        }
+        
+        // 使用BigDecimal进行精确计算
+        double rate = doRightCount.doubleValue() / totalCount.doubleValue();
+        // 保留两位小数，并转换为百分比
+        return Math.round(rate * 10000) / 100.0;
     }
 
     private void setSpecialToVM(ExamPaperSubmitItemVM examPaperSubmitItemVM, ExamPaperQuestionCustomerAnswer examPaperQuestionCustomerAnswer) {

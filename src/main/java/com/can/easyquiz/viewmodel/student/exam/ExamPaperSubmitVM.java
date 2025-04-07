@@ -11,6 +11,7 @@ public class ExamPaperSubmitVM {
 
     @NotNull
     private Integer doTime;
+    private String doTimeStr;
 
     private String score;
 
@@ -48,5 +49,13 @@ public class ExamPaperSubmitVM {
 
     public void setAnswerItems(List<ExamPaperSubmitItemVM> answerItems) {
         this.answerItems = answerItems;
+    }
+
+    public String getDoTimeStr() {
+        return doTimeStr;
+    }
+
+    public void setDoTimeStr(String doTimeStr) {
+        this.doTimeStr = doTimeStr;
     }
 }

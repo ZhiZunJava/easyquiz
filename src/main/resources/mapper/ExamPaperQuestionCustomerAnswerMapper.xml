@@ -269,15 +269,16 @@
 
     <select id="selectCorrectRateByGradeLevel" resultType="java.util.Map">
         SELECT
-            s.level,
+            q.grade_level as level,
             SUM(CASE WHEN a.do_right = 1 THEN 1 ELSE 0 END) AS doRightCount,
             COUNT(a.id) AS totalCount
         FROM
             t_exam_paper_question_customer_answer a
             JOIN t_question q ON a.question_id = q.id
-            JOIN t_subject s ON q.subject_id = s.id
+        WHERE
+            q.deleted = 0
         GROUP BY
-            q.grade_level, s.level
+            q.grade_level
         ORDER BY
             q.grade_level
     </select>
@@ -290,9 +291,10 @@
         FROM
             t_exam_paper_question_customer_answer a
             JOIN t_question q ON a.question_id = q.id
-            JOIN t_subject s ON q.subject_id = s.id
+        WHERE
+            q.deleted = 0
         GROUP BY
-            q.difficult, s.name
+            q.difficult
         ORDER BY
             q.difficult
     </select>

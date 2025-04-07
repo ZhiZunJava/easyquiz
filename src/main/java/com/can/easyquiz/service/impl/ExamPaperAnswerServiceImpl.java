@@ -116,6 +116,7 @@ public class ExamPaperAnswerServiceImpl extends BaseServiceImpl<ExamPaperAnswer>
         ExamPaperAnswer examPaperAnswer = examPaperAnswerMapper.selectByPrimaryKey(id);
         examPaperSubmitVM.setId(examPaperAnswer.getId());
         examPaperSubmitVM.setDoTime(examPaperAnswer.getDoTime());
+        examPaperSubmitVM.setDoTimeStr(ExamUtil.secondToVM(examPaperAnswer.getDoTime()));
         examPaperSubmitVM.setScore(ExamUtil.scoreToVM(examPaperAnswer.getUserScore()));
         List<ExamPaperQuestionCustomerAnswer> examPaperQuestionCustomerAnswers = examPaperQuestionCustomerAnswerService.selectListByPaperAnswerId(examPaperAnswer.getId());
         List<ExamPaperSubmitItemVM> examPaperSubmitItemVMS = examPaperQuestionCustomerAnswers.stream()
