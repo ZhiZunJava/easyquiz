@@ -222,7 +222,12 @@ public class ExamPaperAnswerServiceImpl extends BaseServiceImpl<ExamPaperAnswer>
         examPaperAnswer.setSystemScore(systemScore);
         examPaperAnswer.setUserScore(systemScore);
         examPaperAnswer.setQuestionCorrect((int) questionCorrect);
-        boolean needJudge = examPaperQuestionCustomerAnswers.stream().anyMatch(d -> QuestionTypeEnum.needSaveTextContent(d.getQuestionType()));
+        
+        // 检查试卷中是否包含需要人工批改的题目类型（填空题和简答题）
+        boolean needJudge = examPaperQuestionCustomerAnswers.stream()
+            .anyMatch(d -> d.getQuestionType() == QuestionTypeEnum.GapFilling.getCode() || 
+                          d.getQuestionType() == QuestionTypeEnum.ShortAnswer.getCode());
+        
         if (needJudge) {
             examPaperAnswer.setStatus(ExamPaperAnswerStatusEnum.WaitJudge.getCode());
         } else {
