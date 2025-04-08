@@ -1,0 +1,1 @@
+import{B as a}from"./index-DXJQNOID.js";const r={waitList:e=>a.post({url:"/admin/examPaperAnswer/waitList",data:e}),completeList:e=>a.post({url:"/admin/examPaperAnswer/completeList",data:e}),edit:e=>a.post({url:"/admin/examPaperAnswer/edit",data:e}),read:e=>a.post({url:`/admin/examPaperAnswer/read/${e}`})};export{r as e};
