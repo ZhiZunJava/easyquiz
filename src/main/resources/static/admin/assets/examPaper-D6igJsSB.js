@@ -1,1 +1,0 @@
-import{B as a}from"./index-DXJQNOID.js";const t={pageList:e=>a.post({url:"/admin/exam/paper/page",data:e}),edit:e=>a.post({url:"/admin/exam/paper/edit",data:e}),select:e=>a.post({url:`/admin/exam/paper/select/${e}`}),deletePaper:e=>a.post({url:`/admin/exam/paper/delete/${e}`})};export{t as e};

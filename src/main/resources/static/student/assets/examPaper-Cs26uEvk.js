@@ -1,1 +1,0 @@
-import{x as t}from"./index-BN_aPgIH.js";const p={pageList:e=>t.post({url:"/student/exam/paper/pageList",data:e}),select:e=>t.post({url:`/student/exam/paper/select/${e}`}),generate:e=>t.post({url:"/student/exam/paper/generate",data:e})};export{p as e};
